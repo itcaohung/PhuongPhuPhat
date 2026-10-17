@@ -539,12 +539,14 @@ function ctaBand(depth) {
 </section>`;
 }
 
-function sidebar(depth, activeCat) {
+function sidebar(depth, activeCat, activeSlug) {
   const p = depth ? '../'.repeat(depth) : '';
   const items = CAT_ORDER.map((c) => {
     const isActive = c === activeCat;
-    const subs = isActive ? `<div class="subcat">${DATA.categories[c].map((s) =>
-      `<a href="${p}san-pham/${s}.html">${esc(subLabel(s))}</a>`).join('')}</div>` : '';
+    const subs = isActive ? `<div class="subcat">${DATA.categories[c].map((s) => {
+      const current = s === activeSlug;
+      return `<a class="${current ? 'is-current' : ''}" href="${p}san-pham/${s}.html"${current ? ' aria-current="page"' : ''}>${esc(subLabel(s))}</a>`;
+    }).join('')}</div>` : '';
     return `<li>
       <a class="${isActive ? 'is-active' : ''}" href="${p}san-pham/${c}.html">${esc(CATS[c].name)}${icon('chevron', 'cm-chev')}</a>
       ${subs}
@@ -806,7 +808,7 @@ ${mobileNav(depth, catSlug)}
 ${pageHero(depth, { activeCat: catSlug, crumbs: [{ label: pr.title }] })}
 <section class="section">
   <div class="container shop-layout">
-    ${sidebar(depth, catSlug)}
+    ${sidebar(depth, catSlug, slug)}
     <div class="shop-main">
     <div class="product-main-grid">
       <div class="gallery">
